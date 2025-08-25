@@ -1,0 +1,119 @@
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import { ShopContext } from "../Context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+const Register = () => {
+  const { setUser, setToken, navigate, backendUrl } = useContext(ShopContext);
+
+  const [name, setName] = useState("");
+  const [gmail, setGmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const onsubmithandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(backendUrl + "/api/user/register", {
+        name,
+        gmail,
+        phone,
+        password,
+        confirmPassword,
+      });
+
+      if (response.data.success) {
+        navigate("/");
+        toast.info("Account Created Successfully", {
+          position: "top-center",
+          className: "custom-toast-center",
+          bodyClassName: "text-sm",
+          autoClose: 1000,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+
+        setUser(response.data.user.name);
+        localStorage.setItem("user", response.data.user.name);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message, {
+        position: "top-center",
+        className: "custom-toast-center",
+        bodyClassName: "text-sm",
+        autoClose: 1000,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+    }
+  };
+
+  return (
+    <form
+      onSubmit={onsubmithandler}
+      className="flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-5 gap-4 text-gray-700"
+    >
+      <div className="inline-flex items-center gap-2 mb-2 mt-10">
+        <p className="prata-regular text-3xl"> Sign Up </p>
+        <hr className="border-none h-[1.5px] w-8 bg-gray-800" />
+      </div>
+      <input
+        onChange={(e) => setName(e.target.value)}
+        type="text"
+        className="w-full px-3 py-2 border border-gray-300"
+        placeholder="Full Name"
+        required
+      />
+      <input
+        onChange={(e) => setPhone(e.target.value)}
+        type="number"
+        className="w-full px-3 py-2 border border-gray-300"
+        placeholder="Phone Number"
+        required
+      />
+      <input
+        onChange={(e) => setGmail(e.target.value)}
+        type="gmail"
+        className="w-full px-3 py-2 border border-gray-300"
+        placeholder="Email"
+        required
+      />
+      <input
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        className="w-full px-3 py-2 border border-gray-300"
+        placeholder="New Password"
+        required
+      />
+      <input
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        type="password"
+        className="w-full px-3 py-2 border border-gray-300"
+        placeholder="Confirm Password"
+        required
+      />
+
+      <div className="w-full flex justify-between text-sm ">
+        <p className="cursor-pointer">Forgot your password</p>
+        <Link to="/login">
+          <p className="cursor-pointer">Login Here</p>
+        </Link>
+      </div>
+
+      <button className="bg-black px-8 py-2 mt-8 text-white font-light">
+        Sign Up
+      </button>
+    </form>
+  );
+};
+
+export default Register;
