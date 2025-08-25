@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    phone: { type: String, required: true, unique: true, trim: true },
+    phone: { type: Number, required: true, trim: true },
     gmail: {
       type: String,
       required: true,
@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
       ref: "useraddress",
       default: null,
     },
+    verifyOtp: { type: String, default: '' },
+    verifyOtpExpireAt: { type: Number, default: 0 },
+    isAccountVerified: { type: Boolean, default: false },
+    resetOtp: { type: String, default: '' },
+    resetOtpExpireAt: { type: Number, default: 0 }
   },
   { minimize: false, timestamps: true }
 );

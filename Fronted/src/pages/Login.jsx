@@ -3,12 +3,17 @@ import { Link } from "react-router-dom";
 import { ShopContext } from "../Context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
+
 
 const Login = () => {
   const { setUser, token, setToken, navigate, backendUrl } = useContext(ShopContext);
 
   const [password, setPassword] = useState("");
   const [gmail, setGmail] = useState("");
+  // State for show/hide password
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const onsubmithandler = async (e) => {
     e.preventDefault();
@@ -21,7 +26,7 @@ const Login = () => {
       if (response.data.success) {
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
-        
+
         setUser(response.data.user.name)
         localStorage.setItem("user", response.data.user.name);
         // console.log("Logged in user:", response.data); // ✅ Will work!
@@ -40,6 +45,7 @@ const Login = () => {
       toast.error(error);
     }
   };
+
 
   useEffect(() => {
     if (token) {
@@ -63,13 +69,24 @@ const Login = () => {
         placeholder="Email"
         required
       />
-      <input
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        className="w-full px-3 py-2 border border-gray-300"
-        placeholder="Set Password"
-        required
-      />
+      {/* Password Field with Show/Hide */}
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md"
+                placeholder="New Password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+      <input/>
 
       <div className="w-full flex justify-between text-sm ">
         <p className="cursor-pointer">Forgot your password</p>

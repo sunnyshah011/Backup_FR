@@ -18,16 +18,16 @@ connectCloudinary();
 
 //middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors);
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 //api endpoints
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
-app.use('/api/cart',cartRouter)
-app.use('/api/profile',userAddress)
-app.use('/api/order',orderRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/profile', userAddress)
+app.use('/api/order', orderRouter)
 
 app.get("/", (req, res) => {
   res.send("API");
